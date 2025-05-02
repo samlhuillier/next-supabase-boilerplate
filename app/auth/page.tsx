@@ -1,10 +1,20 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { KeyRound } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import React from "react";
 import { FaGithub } from "react-icons/fa";
-
+import { supabaseBrowser } from "@/lib/supabase/browser";
 export default function page() {
+  const handleLoginWithOAuth = async (provider: "github" | "google") => {
+    const supabase = supabaseBrowser();
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: location.origin + "/auth/callback",
+      },
+    });
+  };
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="w-96 h-96 rounded-md border p-5 space-y-5 relative bg-slate-900">
@@ -13,11 +23,17 @@ export default function page() {
           <h1>AuthPage</h1>
         </div>
         <p className="text-sm text-gray-300">Register/SignIn Today 👇</p>
-        <Button className="w-full flex items-center gap-2">
+        <Button
+          className="w-full flex items-center gap-2"
+          onClick={() => handleLoginWithOAuth("github")}
+        >
           <FaGithub className="w-4 h-4" />
           Github
         </Button>
-        <Button className="w-full flex items-center gap-2">
+        <Button
+          className="w-full flex items-center gap-2"
+          onClick={() => handleLoginWithOAuth("google")}
+        >
           <FcGoogle className="w-4 h-4" />
           Google
         </Button>
