@@ -3,6 +3,14 @@
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import { useQuery } from "@tanstack/react-query";
 
+const initUser = {
+  created_at: "",
+  display_name: null,
+  email: "",
+  id: "",
+  image_url: null,
+};
+
 export const useUser = () => {
   return useQuery({
     queryKey: ["user"],
@@ -11,14 +19,14 @@ export const useUser = () => {
       const { data, error } = await supabase.auth.getSession();
 
       if (data.session?.user) {
-        const { data: userData, error: userError } = await supabase
+        const { data: user } = await supabase
           .from("profiles")
           .select("*")
           .eq("id", data.session.user.id)
           .single();
-        return userData;
+        return user;
       }
-      return null;
+      return initUser;
     },
   });
 };
