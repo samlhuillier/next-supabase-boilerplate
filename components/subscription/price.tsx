@@ -1,3 +1,5 @@
+import Checkout from "./checkout";
+
 export default function Price() {
   const prices = [
     {
@@ -9,10 +11,10 @@ export default function Price() {
     },
     {
       title: "Pro",
-      price: 10,
+      price: 0.1,
       features: ["1000 messages"],
       description: "For small teams",
-      productId: "prod_SFBzwNoS2uy7Pj",
+      productId: "price_1RKlMrKPfo9LRK5rnzJdCwdN",
     },
     {
       title: "Enterprise",
@@ -98,6 +100,7 @@ export default function Price() {
                   ? "Upgrade"
                   : "Contact Sales"}
               </button>
+              <Checkout priceId={price.productId} />
             </div>
           ))}
         </div>
