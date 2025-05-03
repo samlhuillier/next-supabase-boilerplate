@@ -47,7 +47,8 @@ export async function updateSession(request: NextRequest) {
     console.log("request.nextUrl.pathname", request.nextUrl.pathname)
     console.log('redirecting to auth')
     const url = request.nextUrl.clone()
-    url.pathname = '/'
+    url.pathname = '/auth'
+    url.searchParams.set('next', request.nextUrl.pathname + request.nextUrl.search)
     return NextResponse.redirect(url)
   }
 

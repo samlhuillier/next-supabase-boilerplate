@@ -5,13 +5,17 @@ import { FcGoogle } from "react-icons/fc";
 import React from "react";
 import { FaGithub } from "react-icons/fa";
 import { supabaseBrowser } from "@/lib/supabase/browser";
-export default function page() {
+import { useSearchParams } from "next/navigation";
+
+export default function AuthPage() {
+  const params = useSearchParams();
+  const next = params.get("next");
   const handleLoginWithOAuth = async (provider: "github" | "google") => {
     const supabase = supabaseBrowser();
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: location.origin + "/auth/callback",
+        redirectTo: location.origin + "/auth/callback?next=" + next,
       },
     });
   };
