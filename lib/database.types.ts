@@ -9,6 +9,24 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      post: {
+        Row: {
+          created_at: string
+          id: string
+          text: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          text?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          text?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -32,6 +50,38 @@ export type Database = {
           image_url?: string | null
         }
         Relationships: []
+      }
+      subscription: {
+        Row: {
+          created_at: string
+          customer_id: string | null
+          email: string
+          end_at: string | null
+          subscription_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          customer_id?: string | null
+          email: string
+          end_at?: string | null
+          subscription_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string | null
+          email?: string
+          end_at?: string | null
+          subscription_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_email_fkey"
+            columns: ["email"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["email"]
+          },
+        ]
       }
     }
     Views: {

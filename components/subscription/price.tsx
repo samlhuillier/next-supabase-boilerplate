@@ -7,7 +7,7 @@ export default function Price() {
       price: 0,
       features: ["1000 messages", "1000 images", "1000 videos"],
       description: "For personal use",
-      productId: "prod_SFBzjYu0JDzNTK",
+      productId: "price_1RKmexQRxpjdHKav60mzjF35",
     },
     {
       title: "Pro",
