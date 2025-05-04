@@ -1,8 +1,5 @@
 "use server";
 
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import { Database } from "../database.types";
 import { createClient } from "@supabase/supabase-js";
 export async function supabaseAdmin() {
     const supabase = createClient(

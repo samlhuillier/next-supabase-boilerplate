@@ -23,7 +23,7 @@ export const useUser = () => {
     queryKey: ["user"],
     queryFn: async () => {
       const supabase = supabaseBrowser();
-      const { data, error } = await supabase.auth.getSession();
+      const { data } = await supabase.auth.getSession();
 
       if (data.session?.user) {
         const { data: user } = await supabase

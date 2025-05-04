@@ -7,9 +7,9 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function POST(req: any) {
 	const rawBody = await buffer(req.body);
-    console.log("PROCESSING WEBHOOK");
 	try {
 		const sig = (await headers()).get("stripe-signature");
 		let event;
@@ -19,8 +19,11 @@ export async function POST(req: any) {
 				sig!,
 				endpointSecret
 			);
-		} catch (err: any) {
-			return Response.json({ error: `Webhook Error ${err?.message!} ` });
+		} catch (err: unknown) {
+			const message = (err && typeof err === "object" && "message" in err)
+				? (err as { message: string }).message
+				: "Unknown error";
+			return Response.json({ error: `Webhook Error ${message}` });
 		}
 		switch (event.type) {
 			case "invoice.payment_succeeded":
@@ -55,7 +58,7 @@ export async function POST(req: any) {
 				// console.log(`Unhandled event type ${event.type}`);
 		}
 		return Response.json({});
-	} catch (e) {
+	} catch {
 		return Response.json({ error: `Webhook Error}` });
 	}
 }

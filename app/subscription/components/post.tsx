@@ -3,7 +3,7 @@ import { useEffect } from "react";
 export default function Post() {
   const getPost = async () => {
     const supabase = supabaseBrowser();
-    const { data, error } = await supabase.from("post").select("*");
+    const { data } = await supabase.from("post").select("*");
     console.log("data: ", data);
   };
 
