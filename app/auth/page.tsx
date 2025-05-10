@@ -8,9 +8,11 @@ import { supabaseBrowser } from "@/lib/supabase/browser";
 // import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { useQueryClient } from "@tanstack/react-query";
 
 function AuthForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
@@ -49,8 +51,11 @@ function AuthForm() {
           password,
         });
         if (error) throw error;
+        // Invalidate and refetch user data
+        await queryClient.invalidateQueries({ queryKey: ["user"] });
         // Redirect to home page after successful sign in
         router.push("/");
+        router.refresh();
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
