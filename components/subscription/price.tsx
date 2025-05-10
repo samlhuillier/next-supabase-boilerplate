@@ -1,29 +1,45 @@
+"use client";
+
+import { getPrices } from "@/lib/actions/stripe";
 import Checkout from "./checkout";
+import { useEffect, useState } from "react";
+
+type Price = {
+  id: string;
+  title: string;
+  price: number;
+  features: string[];
+  description: string;
+  productId: string;
+};
 
 export default function Price() {
-  const prices = [
-    {
-      title: "Hobby",
-      price: 0,
-      features: ["1000 messages", "1000 images", "1000 videos"],
-      description: "For personal use",
-      productId: "price_1RKmexQRxpjdHKav60mzjF35",
-    },
-    {
-      title: "Pro",
-      price: 0.1,
-      features: ["1000 messages"],
-      description: "For small teams",
-      productId: "price_1RKlMrKPfo9LRK5rnzJdCwdN",
-    },
-    {
-      title: "Enterprise",
-      price: 100,
-      features: ["1000 messages"],
-      description: "For large teams",
-      productId: "prod_SFBzH0UO2e3wEQ",
-    },
-  ];
+  const [prices, setPrices] = useState<Price[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const fetchedPrices = await getPrices();
+        setPrices(fetchedPrices);
+      } catch (error) {
+        console.error("Error fetching prices:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrices();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        Loading prices...
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center py-16 min-h-screen bg-transparent">
       <div className="w-full max-w-4xl mx-auto rounded-2xl bg-[#f7fbfa] dark:bg-[#181a19] border border-[#232624]">
@@ -33,7 +49,7 @@ export default function Price() {
         <div className="grid grid-cols-1 md:grid-cols-3 border-t border-[#232624] dark:border-[#232624]">
           {prices.map((price, idx) => (
             <div
-              key={price.title}
+              key={price.id}
               className={`
                 flex flex-col items-center px-8 py-10
                 ${
@@ -94,7 +110,7 @@ export default function Price() {
                   mt-auto
                 `}
               >
-                {price.title === "Hobby"
+                {price.price === 0
                   ? "Get Started"
                   : price.title === "Pro"
                   ? "Upgrade"

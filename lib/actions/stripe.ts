@@ -32,3 +32,22 @@ export async function cancelSubscription(customerId: string) {
     console.log("Session: ", session);
     return session.url;
 }
+
+export async function getPrices() {
+  const prices = await stripe.prices.list({
+    active: true,
+    expand: ['data.product'],
+  });
+
+  return prices.data.map((price) => {
+    const product = price.product as Stripe.Product;
+    return {
+      id: price.id,
+      title: product.name,
+      price: price.unit_amount ? price.unit_amount / 100 : 0,
+      features: product.metadata.features ? product.metadata.features.split(',') : [],
+      description: product.description || '',
+      productId: price.id,
+    };
+  });
+}
