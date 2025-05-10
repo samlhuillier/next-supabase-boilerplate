@@ -6,11 +6,11 @@ import React, { Suspense, useState } from "react";
 // import { FaGithub } from "react-icons/fa";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 // import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 
 function AuthForm() {
-  // const params = useSearchParams();
-  // const next = params.get("next");
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
@@ -41,12 +41,16 @@ function AuthForm() {
           },
         });
         if (error) throw error;
+        // Show success message for sign up
+        setError("Please check your email to confirm your account");
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) throw error;
+        // Redirect to home page after successful sign in
+        router.push("/");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
