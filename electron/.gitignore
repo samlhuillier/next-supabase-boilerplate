@@ -1,0 +1,9 @@
+node_modules
+
+out/
+.env
+dist/
+dist-electron
+debug-audio
+recorded-audio
+logs

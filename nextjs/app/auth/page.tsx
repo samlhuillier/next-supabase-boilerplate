@@ -2,10 +2,10 @@
 import { Button } from "@/components/ui/button";
 import { KeyRound } from "lucide-react";
 // import { FcGoogle } from "react-icons/fc";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 // import { FaGithub } from "react-icons/fa";
 import { supabaseBrowser } from "@/lib/supabase/browser";
-// import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { useQueryClient } from "@tanstack/react-query";
@@ -13,10 +13,35 @@ import { useQueryClient } from "@tanstack/react-query";
 function AuthForm() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const isDesktop = searchParams.get("desktop") === "true";
+  const errorParam = searchParams.get("error");
+
+  useEffect(() => {
+    if (errorParam) {
+      switch (errorParam) {
+        case "unauthorized":
+          setError("Not authorized. Please sign in first.");
+          break;
+        case "magic_link_failed":
+          setError("Failed to generate authentication link. Please try again.");
+          break;
+        case "no_token":
+          setError("Authentication token not found. Please try again.");
+          break;
+        case "server_error":
+          setError("Server error occurred. Please try again.");
+          break;
+        default:
+          setError("An error occurred during authentication.");
+      }
+    }
+  }, [errorParam]);
 
   // const handleLoginWithOAuth = async (provider: "github" | "google") => {
   //   const supabase = supabaseBrowser();
@@ -53,9 +78,15 @@ function AuthForm() {
         if (error) throw error;
         // Invalidate and refetch user data
         await queryClient.invalidateQueries({ queryKey: ["user"] });
-        // Redirect to home page after successful sign in
-        router.push("/");
-        router.refresh();
+
+        if (isDesktop) {
+          // Redirect to desktop auth endpoint
+          window.location.href = "/api/auth/desktop";
+        } else {
+          // Regular web app redirect
+          router.push("/");
+          router.refresh();
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -67,8 +98,17 @@ function AuthForm() {
       <div className="flex items-center gap-2">
         <KeyRound className="w-10 h-10" />
         <h1>AuthPage</h1>
+        {isDesktop && (
+          <span className="ml-2 px-2 py-1 text-xs bg-blue-600 text-white rounded">
+            Desktop
+          </span>
+        )}
       </div>
-      <p className="text-sm text-gray-300">Register/SignIn Today 👇</p>
+      <p className="text-sm text-gray-300">
+        {isDesktop
+          ? "Sign in to continue to desktop app 👇"
+          : "Register/SignIn Today 👇"}
+      </p>
 
       <form onSubmit={handleEmailAuth} className="space-y-4">
         <Input

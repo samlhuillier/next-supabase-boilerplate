@@ -10,6 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function POST(req: any) {
 	const rawBody = await buffer(req.body);
+	console.log("rawBody", rawBody);
 	try {
 		const sig = (await headers()).get("stripe-signature");
 		let event;

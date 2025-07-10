@@ -1,0 +1,45 @@
+{
+  "name": "electron-system-audio-recorder",
+  "version": "1.0.0",
+  "author": "Sebastian Wąsik",
+  "description": "Electron System Audio Recorder",
+  "main": "./dist-electron/main.js",
+  "scripts": {
+    "swift:make": "swiftc -o src/swift/Recorder src/swift/Recorder.swift",
+    "build": "vite build",
+    "build:electron": "tsc",
+    "typecheck": "tsc --noEmit -p tsconfig.react.json && tsc --noEmit",
+    "electron:start": "npm run build && npm run build:electron && electron-forge start",
+    "electron:package": "npm run build && npm run build:electron && electron-forge package",
+    "electron:make": "npm run build && npm run build:electron && electron-forge make --arch=universal --platform=darwin"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-pkg": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron-forge/plugin-vite": "^7.8.1",
+    "@electron-forge/plugin-webpack": "^7.8.1",
+    "@electron/fuses": "^1.8.0",
+    "@types/node": "^22.15.30",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.6",
+    "electron": "^29.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@deepgram/sdk": "^4.2.0",
+    "@supabase/supabase-js": "^2.50.0",
+    "@vitejs/plugin-react": "^4.5.1",
+    "dotenv": "^16.5.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "shelljs": "^0.8.5",
+    "vite": "^6.3.5"
+  }
+}
